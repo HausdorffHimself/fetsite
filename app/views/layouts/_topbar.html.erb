@@ -1,3 +1,11 @@
+<!--
+Verwendung: Aufruf mit 
+< % = render 'layouts/topbar % > verwendet die Elemente die im Controller per @topbar_elements vorgegeben werden. Sonst kann man über
+< % = render :partial=>'layouts/topbar', :object=>@foo % > einen beliebigen array @foo übergeben
+
+-->
+
+
 <% topbar = !topbar.nil? ? topbar : @topbar_elements %>
 <ul class="breadcrumb">
   <% topbar.each do |tb| %>
@@ -5,7 +13,7 @@
       <br>
     <% else %>
       <li>
-	<%= link_to_unless_current '<i class="'.html_safe + tb[:hicon].to_s.html_safe + '"></i>'.html_safe+ tb[:text], tb[:path] %><span class="divider">/</span></li>
+	<%= link_to_unless_current '<i class="'.html_safe + tb[:hicon].to_s.html_safe + '"></i>'.html_safe+ tb[:text].html_safe, tb[:path] %><span class="divider">/</span></li>
     <% end %>
   <% end %>
 </ul>

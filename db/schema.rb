@@ -11,15 +11,53 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130729085446) do
+ActiveRecord::Schema.define(:version => 20130813145651) do
+
+  create_table "beispiel_translations", :force => true do |t|
+    t.string   "locale"
+    t.text     "desc"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "beispiele_id"
+  end
+
+  add_index "beispiel_translations", ["locale"], :name => "index_beispiel_translations_on_locale"
 
   create_table "beispiele", :force => true do |t|
     t.string   "name"
     t.text     "desc"
     t.integer  "lva_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
-    t.string   "beispieldatei"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+  end
+
+  create_table "calendars", :force => true do |t|
+    t.string   "name"
+    t.boolean  "public"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "picture"
+  end
+
+  create_table "calendars_calentries", :id => false, :force => true do |t|
+    t.integer "calentry_id"
+    t.integer "calendar_id"
+  end
+
+  add_index "calendars_calentries", ["calendar_id"], :name => "index_calendars_calentries_on_calendar_id"
+  add_index "calendars_calentries", ["calentry_id", "calendar_id"], :name => "index_calendars_calentries_on_calentry_id_and_calendar_id"
+
+  create_table "calentries", :force => true do |t|
+    t.datetime "start"
+    t.datetime "ende"
+    t.string   "summary"
+    t.integer  "typ"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "lva_translations", :force => true do |t|
@@ -39,10 +77,13 @@ ActiveRecord::Schema.define(:version => 20130729085446) do
     t.decimal  "ects"
     t.string   "lvanr"
     t.decimal  "stunden"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
     t.integer  "modul_id"
     t.integer  "semester_id"
+    t.text     "pruefungsinformation"
+    t.text     "lernaufwand"
+    t.string   "typ"
   end
 
   create_table "lvas_moduls", :id => false, :force => true do |t|
@@ -50,10 +91,13 @@ ActiveRecord::Schema.define(:version => 20130729085446) do
     t.integer "modul_id"
   end
 
-  create_table "lvas_semesters", :force => true do |t|
+  create_table "lvas_semesters", :id => false, :force => true do |t|
     t.integer "lva_id"
     t.integer "semester_id"
   end
+
+  add_index "lvas_semesters", ["lva_id", "semester_id"], :name => "index_lvas_semesters_on_lva_id_and_semester_id"
+  add_index "lvas_semesters", ["semester_id"], :name => "index_lvas_semesters_on_semester_id"
 
   create_table "modul_translations", :force => true do |t|
     t.integer  "modul_id"
@@ -112,6 +156,18 @@ ActiveRecord::Schema.define(:version => 20130729085446) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "pages", :force => true do |t|
+    t.string   "name"
+    t.string   "url"
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "pages", ["parent_id"], :name => "index_pages_on_parent_id"
+
   create_table "roles", :force => true do |t|
     t.string   "name"
     t.integer  "resource_id"
@@ -148,6 +204,7 @@ ActiveRecord::Schema.define(:version => 20130729085446) do
     t.string   "typ"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "abkuerzung"
   end
 
   create_table "studium_translations", :force => true do |t|

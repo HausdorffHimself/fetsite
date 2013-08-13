@@ -2,7 +2,6 @@ class BeispieleController < ApplicationController
   # GET /beispiele
   # GET /beispiele.json
   def index
-    @lva = params([:lva])
     @beispiele = Beispiel.all
 
     respond_to do |format|
@@ -14,7 +13,7 @@ class BeispieleController < ApplicationController
   # GET /beispiele/1
   # GET /beispiele/1.json
   def show
-    @lva = lva unless lva.nil?
+    # @lva = params([:lva]) unless params([:lva]).nil?
     @beispiel = Beispiel.find(params[:id])
 
     respond_to do |format|
@@ -27,7 +26,8 @@ class BeispieleController < ApplicationController
   # GET /beispiele/new.json
   def new
     @beispiel = Beispiel.new
-    @beispiel.lva_id = params[:lva_id]
+    @beispiel.lva = Lva.find(params[:lva_id])
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @beispiel }
@@ -42,8 +42,9 @@ class BeispieleController < ApplicationController
   # POST /beispiele
   # POST /beispiele.json
   def create
+    lvaid=params[:lva_id]
+    params.delete(:lva_id)
     @beispiel = Beispiel.new(params[:beispiel])
-
     respond_to do |format|
       if @beispiel.save
         format.html { redirect_to @beispiel, notice: 'Beispiel was successfully created.' }
